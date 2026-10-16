@@ -44,6 +44,19 @@ MezoLoop is a DeFi strategy vault built for the **Mezo Buildathon, Track 1**. It
     MEZOLoop --> |MEZO| MEZOToken[MEZO Token]
 ```  
 
+| Component | Role |
+|-----------|------|
+| **MUSD Yield Vault** | ERC-4626 vault for MUSD deposits. Auto-compounds yield via a pluggable strategy. |
+| **MEZO Loop Vault** | Accepts MEZO, borrows MUSD, swaps, and redeposits to create leveraged yield. Includes auto-deleverage. |
+| **Risk Manager** | Centralised health-factor checks. Blocks unsafe borrows during price deviations. Triggers auto-deleverage. |
+| **Composite Oracle** | Aggregates Pyth (BTC, MUSD) and a TWAP (MEZO) with staleness checks and conservative pricing. |
+| **Pyth Network** | Official price feeds for BTC/USD and MUSD/USD on Mezo Testnet. |
+| **TWAP Oracle** | Time-weighted average price for MEZO derived from the Tigris MEZO/MUSD pool. |
+| **Mezo Lending Adapter** | Abstracts Mezo's BorrowerOperations for depositing collateral and borrowing/repaying MUSD. |
+| **Tigris DEX Adapter** | Wraps Tigris Router for MUSD ↔ MEZO swaps with slippage protection. |
+| **BorrowerOperations** | Mezo's native lending contract (Liquity-style trove system). |
+| **Tigris Router** | Mezo's native DEX router for token swaps. |
+
 ## 📡 Oracle Design
 
 MezoLoop uses a **composite oracle** to safely price assets:
