@@ -19,26 +19,30 @@ MezoLoop is a DeFi strategy vault built for the **Mezo Buildathon, Track 1**. It
 
 ## 🧠 Architecture
 
-┌─────────────────┐ ┌──────────────────┐ ┌─────────────────┐
-│ MUSD Vault │ │ MEZO Loop │ │ Risk Manager │
-│ (ERC-4626) │ │ Vault │ │ │
-└────────┬────────┘ └────────┬─────────┘ └────────┬────────┘
-│ │ │
-│ │ │
-▼ ▼ ▼
-┌─────────────────────────────────────────────────────────────────┐
-│ Composite Oracle │
-│ ┌─────────────┐ ┌─────────────┐ ┌─────────────────────────┐ │
-│ │ Pyth (BTC) │ │ Pyth (MUSD) │ │ TWAP (MEZO via Tigris) │ │
-│ └─────────────┘ └─────────────┘ └─────────────────────────┘ │
-└─────────────────────────────────────────────────────────────────┘
-│ │ │
-▼ ▼ ▼
-┌─────────────────┐ ┌──────────────────┐ ┌─────────────────┐
-│ Mezo Lending │ │ Tigris DEX │ │ MUSD / MEZO │
-│ Adapter │ │ Adapter │ │ Tokens │
-└─────────────────┘ └──────────────────┘ └─────────────────┘
-
+ ```bash
+ flowchart TD
+    User[User] --> |Deposit MUSD| MUSDVault[MUSD Yield Vault]
+    User --> |Deposit MEZO| MEZOLoop[MEZO Loop Vault]
+    
+    MUSDVault --> |Supply/Withdraw| Lending[Mezo Lending Adapter]
+    MUSDVault --> |Yield| Strategy[Mock Strategy]
+    
+    MEZOLoop --> |Open/Close Loop| Lending
+    MEZOLoop --> |Swap MUSD ↔ MEZO| DEX[Tigris DEX Adapter]
+    MEZOLoop --> |Check Health| Risk[Risk Manager]
+    
+    Risk --> |Get Prices| Oracle[Composite Oracle]
+    Oracle --> |BTC/USD, MUSD/USD| Pyth[Pyth Network]
+    Oracle --> |MEZO/MUSD TWAP| TWAP[TWAP Oracle]
+    TWAP --> |Read Pool| TigrisPool[Tigris MEZO/MUSD Pool]
+    
+    Lending --> |Borrow/Repay| BorrowerOps[BorrowerOperations]
+    Lending --> |Collateral| Collateral[BTC/MEZO]
+    DEX --> |Swap| TigrisRouter[Tigris Router]
+    
+    MUSDVault --> |MUSD| MUSDToken[MUSD Token]
+    MEZOLoop --> |MEZO| MEZOToken[MEZO Token]
+```  
 
 ## 📡 Oracle Design
 
