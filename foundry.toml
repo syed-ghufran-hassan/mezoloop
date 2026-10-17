@@ -3,4 +3,9 @@ src = "src"
 out = "out"
 libs = ["lib"]
 
+ 
+chain_id = 31611
+eth_rpc_url = "https://rpc.test.mezo.org"
+evm_version = 'london'
+
 # See more config options https://github.com/foundry-rs/foundry/blob/master/crates/config/README.md#all-options
