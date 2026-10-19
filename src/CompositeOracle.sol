@@ -7,21 +7,8 @@ pragma solidity ^0.8.20;
 ///         MEZO: always TWAP-derived. Deviation guard returns conservative price.
 /// @dev All returned prices use 18 decimals.
 
-interface IPyth {
-    struct Price {
-        int64 price;
-        uint64 conf;
-        int32 expo;
-        uint publishTime;
-    }
-    function getPriceUnsafe(bytes32 id) external view returns (Price memory);
-}
-
-interface ITwapOracle {
-    /// @return price Price in 18 decimals
-    /// @return lastUpdate Timestamp of last TWAP observation
-    function consult() external view returns (uint256 price, uint256 lastUpdate);
-}
+import "./interfaces/IPyth.sol";
+import "./interfaces/ITwapOracle.sol";
 
 contract CompositeOracle {
     // ---------- Types ----------
